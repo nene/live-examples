@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Touch 2.0 Live Fiddle</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+<p id="container">
+<textarea id="editor" rows="21" cols="50">
+Ext.create('Ext.Container', {
+    fullscreen: true,
+    padding: 10,
+    items: {
+        xtype: 'button',
+        text: 'My Button',
+        badgeText: '2'
+    }
+});
+</textarea>
+
+<iframe src="eg-iframe.html" id="iframe" width="300" height="340"></iframe>
+</p>
+
+<p id="error"></p>
+
+<script type="text/javascript" src="live.js"></script>
+
+</body>
+</html>
