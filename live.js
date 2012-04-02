@@ -4,17 +4,21 @@
     var iframe = document.getElementById("iframe");
     var error = document.getElementById("error");
 
-    // We have to wait a little for the #loadInlineExample method to
-    // become available.
-    function loadInlineExample(iframe, code, cb) {
+    // Waits until #loadInlineExample method of iframe becomes
+    // available, then calls it with code and passes the result to
+    // callback function.
+    function loadInlineExample(iframe, code, cb, timeout) {
+        timeout = timeout || 2;
         if (iframe.contentWindow.loadInlineExample) {
             var status = iframe.contentWindow.loadInlineExample(code, {});
             cb && cb(status);
         }
         else {
-            setTimeout(function(){ loadInlineExample(iframe, code); }, 100);
+            // The timeout increments exponentially: 2, 4, 8, 16...
+            setTimeout(function(){ loadInlineExample(iframe, code, cb, timeout*2); }, timeout);
         }
     }
+
     loadInlineExample(iframe, editor.value);
 
 
@@ -33,8 +37,7 @@
         newIframe.height = 340;
         newIframe.style.visibility = "hidden";
         newIframe.onload = function() {
-            setTimeout(function(){
-                var status = newIframe.contentWindow.loadInlineExample(code, {});
+            loadInlineExample(newIframe, code, function(status) {
                 if (status === "ok") {
                     container.removeChild(iframe);
                     newIframe.style.visibility = "visible";
@@ -46,7 +49,7 @@
                     showError(status);
                 }
                 frameInProgress = false;
-            }, 10);
+            });
         };
         newIframe.src = iframe.src;
         container.appendChild(newIframe);
