@@ -2,7 +2,7 @@
     var container = document.getElementById("container");
     var textarea = document.getElementById("textarea");
     var iframe = document.getElementById("iframe");
-    var error = document.getElementById("error");
+    var messages = document.getElementById("messages");
 
     // Waits until #loadInlineExample method of iframe becomes
     // available, then calls it with code and passes the result to
@@ -19,12 +19,16 @@
         }
     }
 
-    loadInlineExample(iframe, textarea.value);
-
-
-    function showError(status) {
-        error.innerHTML = status;
+    function showMessage(isOk, status) {
+        messages.className = isOk ? "ok" : "error";
+        messages.innerHTML = status;
     }
+
+    // Perform initial loading
+    loadInlineExample(iframe, textarea.value, function(status) {
+        status === "ok" ? showMessage(true, "Initial loading OK") : showMessage(false, status);
+    });
+
 
     var frameInProgress = false;
     function runPreview(code) {
@@ -42,11 +46,11 @@
                     container.removeChild(iframe);
                     newIframe.style.visibility = "visible";
                     iframe = newIframe;
-                    showError("Run OK");
+                    showMessage(true, "Run OK");
                 }
                 else {
                     container.removeChild(newIframe);
-                    showError(status);
+                    showMessage(false, status);
                 }
                 frameInProgress = false;
             });
@@ -60,10 +64,10 @@
     var inProgress = false;
     validator.onmessage = function(e) {
         if (e.data.status !== "ok") {
-            showError(e.data.status);
+            showMessage(false, e.data.status);
             return;
         }
-        showError("Syntax OK");
+        showMessage(true, "Syntax OK");
 
         if (inProgress) {
             clearTimeout(inProgress);

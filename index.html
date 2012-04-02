@@ -12,7 +12,22 @@
   <style>
     #editor {
         float: left;
+        border: 2px inset white;
+        margin-right: 10px;
+    }
+    .CodeMirror-scroll {
         width: 400px;
+        height: 340px;
+        overflow: auto;
+    }
+    #messages {
+        font-weight: bold;
+    }
+    #messages.error {
+        color: red;
+    }
+    #messages.ok {
+        color: green;
     }
   </style>
 </head>
@@ -36,7 +51,7 @@ Ext.create('Ext.Container', {
 <iframe src="eg-iframe.html" id="iframe" width="300" height="340"></iframe>
 </div>
 
-<p id="error"></p>
+<p id="messages"></p>
 
 <script type="text/javascript" src="live.js"></script>
 
