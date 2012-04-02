@@ -1,6 +1,6 @@
 (function(){
     var container = document.getElementById("container");
-    var editor = document.getElementById("editor");
+    var textarea = document.getElementById("textarea");
     var iframe = document.getElementById("iframe");
     var error = document.getElementById("error");
 
@@ -19,7 +19,7 @@
         }
     }
 
-    loadInlineExample(iframe, editor.value);
+    loadInlineExample(iframe, textarea.value);
 
 
     function showError(status) {
@@ -69,7 +69,7 @@
             clearTimeout(inProgress);
         }
         inProgress = setTimeout(function delay() {
-            if (runPreview(code)) {
+            if (runPreview(e.data.code)) {
                 inProgress = false;
             }
             else {
@@ -78,14 +78,12 @@
         }, 300);
     };
 
-    var code = editor.value;
-    editor.onkeyup = function() {
-        if (code === editor.value) {
-            return;
+    var editor = CodeMirror.fromTextArea(textarea, {
+        mode:  "javascript",
+        indentUnit: 4,
+        onChange: function() {
+            validator.postMessage(editor.getValue());
         }
-        code = editor.value;
-
-        validator.postMessage(code);
-    };
+    });
 
 })();
