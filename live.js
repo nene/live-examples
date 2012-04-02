@@ -6,9 +6,17 @@
 
     // We have to wait a little for the #loadInlineExample method to
     // become available.
-    setTimeout(function(){
-        iframe.contentWindow.loadInlineExample(editor.value, {});
-    }, 100);
+    function loadInlineExample(iframe, code, cb) {
+        if (iframe.contentWindow.loadInlineExample) {
+            var status = iframe.contentWindow.loadInlineExample(code, {});
+            cb && cb(status);
+        }
+        else {
+            setTimeout(function(){ loadInlineExample(iframe, code); }, 100);
+        }
+    }
+    loadInlineExample(iframe, editor.value);
+
 
     function showError(status) {
         error.innerHTML = status;
